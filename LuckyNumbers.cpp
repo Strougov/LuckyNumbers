@@ -1,33 +1,38 @@
 #include <iostream>
+#include <vector>
 
 int main()
 {
-	int counter = 0;
+	unsigned int counter = 0;
 
-	for( int s3 = 0; s3 <= 27; ++s3 )
+	for( unsigned int s3 = 0; s3 <= 27u; ++s3 )
 	{
 		std::cout << "SUM = "<< s3 << std::endl;
 
-		int s2Min = std::max( 0, s3 - 9 );
-		int s2Max = std::min( 18, s3 );
+		unsigned int const s2Min = std::max( 0u, s3 - 9u );
+		unsigned int const s2Max = std::min( 18u, s3 );
 
-		for( int s2One = s2Min, aOne = s3 - s2One; s2One <= s2Max; ++s2One, --aOne)
+		std::vector<unsigned int> triplets;
+		triplets.reserve((s2Max - s2Min) + 1);
+
+		for( unsigned int s2One = s2Min, aOne = s3 - s2One; s2One <= s2Max; ++s2One, --aOne)
 		{
-			for( int bOne = std::max( 0, s2One - 9 ), cOne = s2One - bOne; bOne <= std::min( 9, s2One ); ++bOne, --cOne)
+			unsigned int const bOne_max = std::min( 9u, s2One );
+			for( unsigned int bOne = std::max( 0u, s2One - 9u ), cOne = s2One - bOne; bOne <= bOne_max; ++bOne, --cOne)
 			{
-				for( int s2Two = s2Min, aTwo = s3 - s2Two; s2Two <= s2Max; ++s2Two, --aTwo)
-				{
-					for( int bTwo = std::max( 0, s2Two - 9 ), cTwo = s2Two - bTwo; bTwo <= std::min( 9, s2Two ); ++bTwo, --cTwo)
-					{
-						std::cout << "\t: " << aOne << bOne << cOne << aTwo << bTwo << cTwo << std::endl;
+				triplets.emplace_back((aOne * 100u) + (bOne * 10u) + cOne);
+			}
+		}
 
-						++counter;
-					}
-				}
+		for(auto const &it_left : triplets)
+		{
+			for(auto const &it_right : triplets)
+			{
+				std::cout << "\t: " << it_left << it_right << std::endl;
 			}
 		}
 	}
 
 	std::cout << "Total : " << counter;
- 	return EXIT_SUCCESS;
+	return EXIT_SUCCESS;
 }
